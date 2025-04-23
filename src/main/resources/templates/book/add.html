@@ -21,34 +21,6 @@
                                 <a th:href="@{/book/index}" class="link">← 一覧へ戻る</a>
                             </span>
                         </div>
-                            <tr>
-                                <th scope="col">*は必須です</th>
-                                <br>
-                            </tr>
-                            <tr>
-                                <th scope="col">書籍名</th>
-                                <th scope="col">*</th>
-                                <br>
-                                <td>
-                                    <div class="error_msg" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
-                                    </div>
-                                    <input type="text" name="title" placeholder="書籍名を入力" th:field="*{title}"/>
-                                </td>
-                            </tr>
-                            <br>
-                            <tr>
-                                <th scope="col">ISBN</th>
-                                <th scope="col">*</th>
-                                <br>
-                                <td>
-                                    <div class="error_msg" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}">
-                                    </div>
-                                    <input type="text" name="isbn" placeholder="ISBNを入力" th:field="*{isbn}" />
-                                </td>
-                            </tr>
-                            <div class="btn_block">
-                                <input type="submit" value="保存">
-                            </div>
                     </form>
                 </div>
             </div>
