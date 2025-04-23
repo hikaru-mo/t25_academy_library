@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
+import jp.co.metateam.library.model.Account;
+import jp.co.metateam.library.model.AccountDto;
 import jp.co.metateam.library.model.BookMst;
 import jp.co.metateam.library.model.BookMstDto;
 import jp.co.metateam.library.service.BookMstService;
@@ -50,5 +52,62 @@ public class BookController {
 
         return "book/add";
     }
-    
+
+    @PostMapping("/book/add")
+    public String add(@Valid @ModelAttribute BookMstDto bookMstDto, BindingResult result, RedirectAttributes ra, Model model) {
+        try{
+            boolean errTitleFlg = false;
+            boolean errIsbnFlg = false;
+            String bookTitle = bookMstDto.getTitle();
+            String bookIsbn = bookMstDto.getIsbn();
+            List<BookMst> isbnExist = this.bookMstService.selectByIsbn(bookIsbn);
+
+
+            if(bookTitle == null || bookTitle.isEmpty()){
+                result.rejectValue("title", "error.value", "書籍名は必須です");
+                errTitleFlg = true;
+            }
+
+            if(bookTitle.length() > 255){
+                result.rejectValue("title", "error.value", "書籍名は255文字以内で入力してください");
+                errTitleFlg = true;
+            }
+
+            if(bookIsbn == null || bookIsbn.trim().isEmpty()){
+                result.rejectValue("isbn", "error.value", "ISBNは必須です");
+                errIsbnFlg = true;
+                }
+            
+                else if(bookIsbn.length() != 13){
+                result.rejectValue("isbn", "error.value", "ISBNは13桁で入力してください");
+                errIsbnFlg = true;
+                }
+
+                else if(bookIsbn == null || !bookIsbn.matches("^[0-9]+$")){
+                result.rejectValue("isbn", "error.value", "ISBNは半角数字で入力してください");
+                errIsbnFlg = true;
+                }
+            
+
+            if(isbnExist.size() != 0){
+                result.rejectValue("isbn", "error.value", "登録済みのISBNです");
+                errIsbnFlg = true;
+            }
+
+            if (errTitleFlg || errIsbnFlg) {
+                throw new Exception("Account already exists.");
+            }
+
+            
+            bookMstService.save(bookMstDto);
+            return "/book/index";
+        }
+        catch (Exception e) {
+            log.error(e.getMessage());
+
+            ra.addFlashAttribute("bookMstDto", bookMstDto);
+            ra.addFlashAttribute("org.springframework.validation.BindingResult.bookMstDto", result);
+            return "/book/add";
+        }
+    }
 }
