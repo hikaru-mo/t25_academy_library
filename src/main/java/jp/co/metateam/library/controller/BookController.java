@@ -60,7 +60,6 @@ public class BookController {
             boolean errIsbnFlg = false;
             String bookTitle = bookMstDto.getTitle();
             String bookIsbn = bookMstDto.getIsbn();
-            List<BookMst> isbnExist = this.bookMstService.selectByIsbn(bookIsbn);
 
 
             if(bookTitle == null || bookTitle.isEmpty()){
@@ -87,8 +86,9 @@ public class BookController {
                 result.rejectValue("isbn", "error.value", "ISBNは半角数字で入力してください");
                 errIsbnFlg = true;
                 }
-            
 
+            List<BookMst> isbnExist = this.bookMstService.selectByIsbn(bookIsbn);
+            
             if(isbnExist.size() != 0){
                 result.rejectValue("isbn", "error.value", "登録済みのISBNです");
                 errIsbnFlg = true;
@@ -100,7 +100,7 @@ public class BookController {
 
             
             bookMstService.save(bookMstDto);
-            return "/book/index";
+            return "redirect:index";
         }
         catch (Exception e) {
             log.error(e.getMessage());
