@@ -12,7 +12,7 @@
             <div th:replace="~{common :: header}"></div>
             <div class="inner_contens">
                 <div class="page_title">書籍一覧</div>
-                <form id=books_table th:action="@{/book/add}" method="get">
+                <form th:action="@{/book/add}" method="get">
                     <button type="submit">書籍登録</button>
                 </form>
             </div>
